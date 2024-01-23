@@ -38,7 +38,7 @@ const CreatePost = () => {
         </p>
       </div>
 
-      <form className="mt-16 max-w-3xl" onSubmit={handleSubmit}>
+      <form className="mt-16 max-w-4xl" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-5">
           <FormField
             labelName="Your name"
@@ -86,7 +86,7 @@ const CreatePost = () => {
         <div className="mt-5 flex gap-5">
           <button
             onClick={generateImage}
-            className="text-slate-200 bg-blue-400 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2 text-center"
+            className="text-white bg-blue-400 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2 text-center"
           >
             {generatingImg ? "Generating..." : "Generate"}
           </button>
@@ -95,7 +95,7 @@ const CreatePost = () => {
         <div className="mt-10">
           <button
             type="submit"
-            className="text-slate-200 bg-blue-400 px-5 py-2 rounded-md text-sm sm:w-auto w-full"
+            className="text-white bg-blue-400 px-5 py-2 rounded-md text-sm font-medium sm:w-auto w-full"
           >
             {loading ? "Sharing..." : "Share with the community"}
           </button>

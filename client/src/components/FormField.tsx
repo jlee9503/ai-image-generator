@@ -27,6 +27,7 @@ const FormField = ({
         </label>
         {isRandomPrompt && (
           <button
+            type="button"
             onClick={handleRandomPrompt}
             className="font-semibold text-xs bg-slate-300 rounded-md text-slate-700 p-2"
           >
