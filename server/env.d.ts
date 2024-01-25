@@ -4,6 +4,7 @@ declare global {
       [key: string]: string | undefined;
       PORT: string;
       MONGODB_URL: string;
+      OPENAI_API_KEY: string;
     }
   }
 }

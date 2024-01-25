@@ -5,9 +5,15 @@ import { getRandomPrompt } from "../utils/getRandomPrompt";
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
 
+interface Iform {
+  name: string;
+  prompt: string;
+  photo: string;
+}
+
 const CreatePost = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Iform>({
     name: "",
     prompt: "",
     photo: "",
@@ -15,7 +21,9 @@ const CreatePost = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,7 +34,30 @@ const CreatePost = () => {
     setForm({ ...form, prompt: randomPrompt });
   };
 
-  const generateImage = () => {};
+  const generateImage = async () => {
+    // const baseUrl = window.location.origin;
+
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+        const response: Response = await fetch("http://localhost:8080/api/image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+      } catch (error) {
+        alert(error);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert("Please enter a prompt to generate image");
+    }
+  };
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -44,7 +75,7 @@ const CreatePost = () => {
             labelName="Your name"
             type="text"
             name="name"
-            placeholder="John Doe"
+            placeholder="ex..John Doe"
             value={form.name}
             handleChange={handleChange}
           />
