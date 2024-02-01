@@ -1,30 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
-import Card from '../components/Card';
+import Card from "../components/Card";
 
-interface CardDataProps {
-  data: string[];
+interface ICards {
+  data: IPostData[] | null;
   statusMsg: string;
 }
 
-const RenderCards = ({data, statusMsg}: CardDataProps) => {
-  if (data.length > 0) {
-    return (
-      data.map((post) => <Card key={post} imgData={post} />)
-    )
-  } else {
-    return (
-      <h2>{statusMsg}</h2>
-    )
-  }
+interface IPostData {
+  name: string;
+  photo: string;
+  prompt: string;
+  __v: number;
+  _id: string;
 }
+
+const RenderCards = ({data, statusMsg}: ICards) => {
+  if (data != null && data.length > 0) {
+    return data.map((post) => (
+      <Card
+        key={post._id}
+        _id={post._id}
+        name={post.name}
+        prompt={post.prompt}
+        photo={post.photo}
+      />
+    ));
+  } else {
+    return <h2>{statusMsg}</h2>;
+  }
+};
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
-  const [allPosts, setAllPosts] = useState(null);
-  const [searchText, setSearchText] = useState("abc");
+  const [allPosts, setAllPosts] = useState<IPostData[] | null>(null);
+  const [searchText, setSearchText] = useState("");
+
+  const fetchPostData = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/post", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // console.log(result.data)
+        const postData: IPostData[] = result.data.reverse();
+        console.log(postData);
+        setAllPosts(postData);
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPostData();
+  }, []);
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -39,7 +80,12 @@ const Home = () => {
       </div>
 
       <div className="mt-16">
-        <FormField />
+        <FormField
+          labelName="Search Posts"
+          type="text"
+          name="searchpost"
+          placeholder="Search keyword..."
+        />
       </div>
 
       <div className="mt-10">
@@ -51,16 +97,17 @@ const Home = () => {
           <div>
             {searchText && (
               <div className="text-slate-400 font-medium text-xl mb-3">
-                Showing results for <span className="text-slate-700">{searchText}</span>
+                Showing results for{" "}
+                <span className="text-slate-700">{searchText}</span>
               </div>
+            )}
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {searchText ? (
+                <RenderCards data={[]} statusMsg="No search results found" />
+              ) : (
+                <RenderCards data={allPosts} statusMsg="No posts found" />
               )}
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {searchText ? (
-                  <RenderCards data={[]} statusMsg="No search results found" />
-                ) : (
-                    <RenderCards data={[]} statusMsg="No posts found" />
-                )}
-              </div>
+            </div>
           </div>
         )}
       </div>

@@ -21,7 +21,7 @@ const FormField = ({
 }: FormFieldProps) => {
   return (
     <div>
-      <div className="flex justify-between items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-2">
         <label htmlFor={name} className="text-sm font-medium text-slate-700">
           {labelName}
         </label>
@@ -43,7 +43,7 @@ const FormField = ({
         value={value}
         onChange={handleChange}
         required
-        className="bg-gray-50 border border-gray-300 text-slate-700 text-sm rounded-lg outline-none w-full p-3 focus:ring-blue-400 focus:border-blue-400"
+        className="bg-gray-50 border border-gray-300 text-slate-700 text-sm rounded-lg outline-none w-full max-w-7xl p-3 focus:ring-blue-400 focus:border-blue-400"
       />
     </div>
   );
