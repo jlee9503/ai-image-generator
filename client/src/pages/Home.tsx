@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import FormField from "../components/FormField";
 import Loader from "../components/Loader";
@@ -17,7 +17,7 @@ interface IPostData {
   _id: string;
 }
 
-const RenderCards = ({data, statusMsg}: ICards) => {
+const RenderCards = ({ data, statusMsg }: ICards) => {
   if (data != null && data.length > 0) {
     return data.map((post) => (
       <Card
@@ -37,6 +37,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState<IPostData[] | null>(null);
   const [searchText, setSearchText] = useState("");
+  const [searchPosts, setSearchPosts] = useState<IPostData[] | null>(null);
 
   const fetchPostData = async () => {
     setLoading(true);
@@ -53,7 +54,7 @@ const Home = () => {
         const result = await response.json();
         // console.log(result.data)
         const postData: IPostData[] = result.data.reverse();
-        console.log(postData);
+        // console.log(postData);
         setAllPosts(postData);
       }
     } catch (error) {
@@ -66,6 +67,22 @@ const Home = () => {
   useEffect(() => {
     fetchPostData();
   }, []);
+
+  const handleSearchText = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchText(e.target.value);
+      const searchResult = allPosts?.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.prompt.toLowerCase().includes(searchText.toLowerCase())
+      );
+
+      if (searchResult) {
+        setSearchPosts(searchResult);
+      }
+    },
+    [allPosts, searchText]
+  );
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -85,6 +102,8 @@ const Home = () => {
           type="text"
           name="searchpost"
           placeholder="Search keyword..."
+          handleChange={handleSearchText}
+          value={searchText}
         />
       </div>
 
@@ -103,7 +122,10 @@ const Home = () => {
             )}
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {searchText ? (
-                <RenderCards data={[]} statusMsg="No search results found" />
+                <RenderCards
+                  data={searchPosts}
+                  statusMsg="No search results found"
+                />
               ) : (
                 <RenderCards data={allPosts} statusMsg="No posts found" />
               )}
