@@ -4,5 +4,7 @@
 - filter shared image list by name and prompt
 
 Main page
+<img width="1000" alt="homepage-screenshot" src="/image/home.png">
 
 Create page
+<img width="1000" alt="createpage-screenshot" src="/image/create.png">
