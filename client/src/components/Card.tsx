@@ -1,5 +1,5 @@
 import { downloadImage } from "../utils/downloadImage";
-import download from "../../public/images/download.png";
+import download from "/images/download.png";
 
 interface CardProps {
   _id: string;

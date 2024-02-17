@@ -29,7 +29,7 @@ const CreatePost = () => {
 
       try {
         const response: Response = await fetch(
-          "http://localhost:8080/api/post",
+          "https://ai-image-generator-app-relq.onrender.com/api/post",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
         const response: Response = await fetch(
-          "http://localhost:8080/api/image",
+          "https://ai-image-generator-app-relq.onrender.com/api/image",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
